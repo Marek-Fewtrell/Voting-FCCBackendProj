@@ -1,0 +1,19 @@
+{
+  "name": "voting-fccbackendproj",
+  "version": "1.0.0",
+  "description": "Voting App for FCC",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marek Fewtrell",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marek-Fewtrell/Voting-FCCBackendProj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Marek-Fewtrell/Voting-FCCBackendProj/issues"
+  },
+  "homepage": "https://github.com/Marek-Fewtrell/Voting-FCCBackendProj#readme"
+}
