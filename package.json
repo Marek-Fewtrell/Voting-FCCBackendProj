@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/Marek-Fewtrell/Voting-FCCBackendProj/issues"
   },
-  "homepage": "https://github.com/Marek-Fewtrell/Voting-FCCBackendProj#readme"
+  "homepage": "https://github.com/Marek-Fewtrell/Voting-FCCBackendProj#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mongoose": "^4.13.7"
+  }
 }
