@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle ? pageTitle : "Voting App"
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    //script(src='/javascript/test.js')
+body
+  h1= title ? title : "Voting App"
+  a(href='/polls') Polls
+  a(href='/User') User
+  a(href='/login') Login
+  div#container
+  hr
+  block content
