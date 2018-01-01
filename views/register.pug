@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    h2 Register Page
+    form(name="registerForm", method="post")
+      div
+        label username:
+        input(type="text" name="username")
+      div
+        label password:
+        input(type="password", name="password")
+      div
+        label confirm password:
+        input(type="password", name="passwordConf")
+      div
+        input(type="submit")
