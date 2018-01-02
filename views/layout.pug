@@ -6,9 +6,11 @@ html(lang="en")
     //script(src='/javascript/test.js')
 body
   h1= title ? title : "Voting App"
+  a(href='/') Home
   a(href='/polls') Polls
   a(href='/User') User
   a(href='/login') Login
+  a(href='/logout') Logout
   div#container
   hr
   block content

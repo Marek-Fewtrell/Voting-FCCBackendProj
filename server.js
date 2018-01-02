@@ -3,7 +3,20 @@ const path = require("path")
 const express = require('express')
 var bodyParser = require('body-parser')
 var session = require('express-session')
-//const pug = require('pug')
+var mongoose = require('mongoose')
+
+//var MongoClient = require('mongodb').MongoClient;
+var mongoURL = "mongodb://localhost/votingApp";
+mongoose.connect(mongoURL)
+var db = mongoose.connection
+
+//handle mongo error
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  // we're connected!
+  console.log("Successfully connected to database")
+});
+
 
 const app = express()
 
@@ -22,6 +35,7 @@ app.use(session({
     saveUninitialized: false
   }))
 
+var user = require ('./models/user')
 
 app.get('/', function(req, res, next) {
   res.redirect('/index')
@@ -29,7 +43,7 @@ app.get('/', function(req, res, next) {
 
 //Middleware to ensure user is logged in to view the main page.
 app.use('/index', function(req, res, next) {
-  if (req.session && req.session.userId === 'authed') {
+  if (req.session && req.session.userId) {
     return next()
   } else {
     res.redirect('/login')
@@ -57,6 +71,29 @@ app.delete('/', function (req, res, next) {
   res.send("got a DELETE request")
 })
 
+app.get('/register', function(req, res, next) {
+  res.render('register')
+})
+
+app.post('/register', function(req, res, next) {
+  if (req.body.username && req.body.password && req.body.passwordConf) {
+    var userData = {
+      username: req.body.username,
+      password: req.body.password,
+      passwordConf: req.body.passwordConf
+    }
+
+    //use schema.create to insert data into the db
+    user.create(userData, function(err, user) {
+      if (err) {
+        return next(err)
+      } else {
+        req.session.userId = user._id
+        return res.redirect('/')
+      }
+    })
+  }
+})
 
 app.get('/login', function(req, res, next) {
   res.render("login")
@@ -64,16 +101,20 @@ app.get('/login', function(req, res, next) {
 
 app.post('/login', function(req, res, next) {
   if (req.body.username && req.body.password) {
-    if (req.body.username === 'test' && req.body.password === 'pass') {
-      req.session.userId = 'authed'
-      console.log('authed properly')
-      return res.redirect('/')
-    } else {
-      console.log(req.body)
-      var err = new Error("not correct login")
-      err.status = 400
-      return next(err)
-    }
+    user.authenticate(req.body.username, req.body.password, function(error, user) {
+      if (error || !user) {
+        var err = new Error("wrong email or password")
+        err.status = 401
+        return next(err)
+      } else {
+        req.session.userId = user._id
+        return res.redirect('/')
+      }
+    })
+  } else {
+    var err = new Error("not correct login")
+    err.status = 400
+    return next(err)
   }
 })
 
