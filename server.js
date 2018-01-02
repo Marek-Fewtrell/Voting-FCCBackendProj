@@ -59,7 +59,7 @@ app.get('/index', function (req, res, next) {
   res.render("index")
 })
 
-app.post('/', function (req, res, next) {
+/*app.post('/', function (req, res, next) {
   res.send("got a POST request")
 })
 
@@ -69,7 +69,14 @@ app.put('/', function (req, res, next) {
 
 app.delete('/', function (req, res, next) {
   res.send("got a DELETE request")
+})*/
+
+
+app.get('/polls', function (req, res, next) {
+  console.log("test")
+  res.render('polls')
 })
+
 
 app.get('/register', function(req, res, next) {
   res.render('register')
