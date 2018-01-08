@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h2 #{poll.pollName} Poll Page
+  h4 Created By: #{poll.pollCreator}
+  h3 Poll Options
+  each val in poll.pollOptions
+    p= val.name

@@ -1,9 +1,18 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
+var pollOptionSchema = new Schema({
+  name: {
+    type: String
+  },
+  count: {
+    type: Number
+  }
+})
+
 var PollSchema = new Schema({
   pollCreator: {
-    type: int,
+    type: Number,
     required: true
   },
   pollName: {
@@ -13,11 +22,9 @@ var PollSchema = new Schema({
   pollId: {
     type:String,
     required: true,
-    unique: true
+    //unique: true
   },
-  pollOptions: {
-    type: []
-  }
+  pollOptions: [pollOptionSchema]
 })
 
 var Poll = mongoose.model('polls', PollSchema)

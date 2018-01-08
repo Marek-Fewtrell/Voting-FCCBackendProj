@@ -2,3 +2,11 @@ extends layout
 
 block content
   h2 Poll Page
+  a(href='polls/create') Create Poll
+  if listOfPolls.length > 0
+    ul
+      each val in listOfPolls
+        a(href="/poll/"+ val.pollId)
+          li= val.pollName
+  else
+    p No Polls Available

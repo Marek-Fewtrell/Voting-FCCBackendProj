@@ -36,6 +36,7 @@ app.use(session({
   }))
 
 var user = require ('./models/user')
+var polls = require ('./models/poll')
 
 app.get('/', function(req, res, next) {
   res.redirect('/index')
@@ -73,10 +74,67 @@ app.delete('/', function (req, res, next) {
 
 
 app.get('/polls', function (req, res, next) {
-  console.log("test")
-  res.render('polls')
+  polls.find().exec(
+    function(err, polls) {
+      if (err) {
+        return next(err)
+      } else {
+        console.log(polls)
+        res.render('polls', {listOfPolls: polls})
+      }
+    }
+  )
+  //res.render('polls')
+})
+app.post('/polls', function(req, res, next) {
+  if (req.body.type && req.body.type == 'add') {
+
+  } else if (req.body.type && req.body.type == 'remove') {
+
+  }
 })
 
+app.get('/poll/:pollId', function(req, res, next) {
+    polls.findOne({pollId: req.params.pollId}).exec(
+      function(err, result) {
+        if (err) {
+          return next(err)
+        } else {
+          console.log(result)
+          res.render('poll', {poll: result})
+        }
+      }
+    )
+})
+
+app.get('/polls/create', function(req, res, next) {
+  res.render('pollcreate')
+})
+app.post('/polls/create', function(req, res, next) {
+  if (req.body.pollName) {
+
+    var newPollOptions = []
+    newPollOptions.push({name: req.body.pollOption1})
+    newPollOptions.push({name: "Test Option 3"})
+
+    console.log("poll Options:")
+    console.log(newPollOptions)
+    var pollData = {
+      pollId: 'test4',
+      pollName: req.body.pollName,
+      pollCreator: 1,
+      pollOptions: newPollOptions
+    }
+    console.log(pollData)
+    polls.create(pollData, function(err, poll) {
+      if (err) {
+        return next(err)
+      } else {
+        return res.redirect('/polls')
+      }
+    })
+  }
+})
 
 app.get('/register', function(req, res, next) {
   res.render('register')
