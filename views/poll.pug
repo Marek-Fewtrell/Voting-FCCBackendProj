@@ -5,4 +5,5 @@ block content
   h4 Created By: #{poll.pollCreator}
   h3 Poll Options
   each val in poll.pollOptions
-    p= val.name
+    a(href='/polls/' + poll._id + '/vote/' + val._id) Vote for #{val.name}
+    p #{val.name} Voted: #{val.count}

@@ -6,7 +6,7 @@ block content
   if listOfPolls.length > 0
     ul
       each val in listOfPolls
-        a(href="/poll/"+ val.pollId)
+        a(href="/poll/"+ val._id)
           li= val.pollName
   else
     p No Polls Available

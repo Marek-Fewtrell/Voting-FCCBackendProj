@@ -6,7 +6,8 @@ var pollOptionSchema = new Schema({
     type: String
   },
   count: {
-    type: Number
+    type: Number,
+    default: 0
   }
 })
 
@@ -19,11 +20,11 @@ var PollSchema = new Schema({
     type: String,
     required: true
   },
-  pollId: {
+/*  pollId: {
     type:String,
     required: true,
     //unique: true
-  },
+  },*/
   pollOptions: [pollOptionSchema]
 })
 

@@ -73,40 +73,12 @@ app.delete('/', function (req, res, next) {
 })*/
 
 
-app.get('/polls', function (req, res, next) {
-  polls.find().exec(
-    function(err, polls) {
-      if (err) {
-        return next(err)
-      } else {
-        console.log(polls)
-        res.render('polls', {listOfPolls: polls})
-      }
-    }
-  )
-  //res.render('polls')
-})
-app.post('/polls', function(req, res, next) {
-  if (req.body.type && req.body.type == 'add') {
-
-  } else if (req.body.type && req.body.type == 'remove') {
-
-  }
-})
-
-app.get('/poll/:pollId', function(req, res, next) {
-    polls.findOne({pollId: req.params.pollId}).exec(
-      function(err, result) {
-        if (err) {
-          return next(err)
-        } else {
-          console.log(result)
-          res.render('poll', {poll: result})
-        }
-      }
-    )
-})
-
+/*
+  -------------------Poll CRUD Start-------------------
+*/
+/*
+  Creating a new poll
+*/
 app.get('/polls/create', function(req, res, next) {
   res.render('pollcreate')
 })
@@ -120,7 +92,6 @@ app.post('/polls/create', function(req, res, next) {
     console.log("poll Options:")
     console.log(newPollOptions)
     var pollData = {
-      pollId: 'test4',
       pollName: req.body.pollName,
       pollCreator: 1,
       pollOptions: newPollOptions
@@ -135,6 +106,113 @@ app.post('/polls/create', function(req, res, next) {
     })
   }
 })
+
+/*
+  Veiwing list of polls
+*/
+app.get('/polls', function (req, res, next) {
+  polls.find().exec(
+    function(err, polls) {
+      if (err) {
+        return next(err)
+      } else {
+        console.log(polls)
+        res.render('polls', {listOfPolls: polls})
+      }
+    }
+  )
+})
+app.post('/polls', function(req, res, next) {
+  if (req.body.type && req.body.type == 'add') {
+
+  } else if (req.body.type && req.body.type == 'remove') {
+
+  }
+})
+
+/*
+  View one specific poll
+*/
+app.get('/poll/:pollId', function(req, res, next) {
+    polls.findOne({_id: req.params.pollId}).exec(
+      function(err, result) {
+        if (err) {
+          return next(err)
+        } else {
+          console.log(result)
+          res.render('poll', {poll: result})
+        }
+      }
+    )
+})
+
+/*
+  Update a poll
+*/
+
+
+/*
+  Deleting a poll
+*/
+app.get('/polls/delete/:pollId', function(req, res, next) {
+  return res.send("Deleting a poll: " + req.params.pollId)
+})
+
+/*
+  -------------------Poll CRUD End-------------------
+*/
+/*
+  -------------------Poll Option CRUD Start-------------------
+*/
+/*
+  Creating an option to a poll
+*/
+app.get('polls/:pollId/add', function(req, res, next) {
+
+})
+app.post('polls/:pollId/add', function(req, res, next) {
+
+})
+
+/*
+  voting for an option for a poll
+*/
+app.get('/polls/:pollId/vote/:voteId', function(req, res, next) {
+
+  polls.findById(req.params.pollId, function(err, result) {
+    if (err) return next(err)
+    //console.log("This is the result:")
+    //console.log(result)
+
+    var voteItem = result.pollOptions.findIndex(function(element) {
+      return element._id == req.params.voteId
+    })
+    //console.log("index: " + voteItem)
+    //var tempCount = result.pollOptions[voteItem].count
+    //tempCount += 1
+    //result.set({pollOptions[voteItem].count: tempCount})
+    result.pollOptions[voteItem].count += 1
+
+    result.save(function(err, updateResult) {
+      if (err) return next(err)
+      res.redirect('/poll/' + req.params.pollId)
+      //res.render('poll/' + req.params.pollId)
+      /*res.render('poll', function(err, html) {
+        console.log("Sending html")
+        console.log(html)
+        return res.send(html)
+      })*/
+    })
+  })
+
+  // redirect to polls/:pollId with status message.
+  //return res.send("In voting for something")
+})
+
+/*
+  -------------------Poll Option CRUD End-------------------
+*/
+
 
 app.get('/register', function(req, res, next) {
   res.render('register')
