@@ -13,7 +13,7 @@ var pollOptionSchema = new Schema({
 
 var PollSchema = new Schema({
   pollCreator: {
-    type: Number,
+    type: String,
     required: true
   },
   pollName: {

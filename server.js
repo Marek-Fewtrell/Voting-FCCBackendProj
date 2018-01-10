@@ -91,9 +91,10 @@ app.post('/polls/create', function(req, res, next) {
 
     console.log("poll Options:")
     console.log(newPollOptions)
+
     var pollData = {
       pollName: req.body.pollName,
-      pollCreator: 1,
+      pollCreator: req.session.userId,
       pollOptions: newPollOptions
     }
     console.log(pollData)
@@ -116,8 +117,13 @@ app.get('/polls', function (req, res, next) {
       if (err) {
         return next(err)
       } else {
-        console.log(polls)
-        res.render('polls', {listOfPolls: polls})
+        var myPolls = []
+        //console.log(polls)
+        if (req.session && req.session.userId) {
+          myPolls = polls.filter(x => x.pollCreator == req.session.userId)
+          //var otherPolls = polls.map()
+        }
+        res.render('polls', {listOfPolls: polls, userPolls: myPolls})
       }
     }
   )
@@ -140,7 +146,13 @@ app.get('/poll/:pollId', function(req, res, next) {
           return next(err)
         } else {
           console.log(result)
-          res.render('poll', {poll: result})
+          var isOwner = false
+          console.log(result.pollCreator + ":\:" + req.session.userId)
+          if (result.pollCreator === req.session.userId) {
+            isOwner = true
+          }
+          console.log("owner true?" + isOwner)
+          res.render('poll', {poll: result, isOwner: isOwner})
         }
       }
     )
@@ -155,7 +167,24 @@ app.get('/poll/:pollId', function(req, res, next) {
   Deleting a poll
 */
 app.get('/polls/delete/:pollId', function(req, res, next) {
-  return res.send("Deleting a poll: " + req.params.pollId)
+
+  polls.remove({_id: req.params.pollId, pollCreator: req.session.userId}, function(err) {
+    if (err) return next(err)
+    console.log("deleted poll")
+  })
+  /*polls.findOne({_id: req.params.pollId}).exec(
+    function(err, result) {
+      if (err) {
+        return next(err)
+      } else {
+        if (req.session.userId == result.pollCreator) {
+          return res.send("Deleting a poll: " + req.params.pollId)
+        }
+
+      }
+  )*/
+
+
 })
 
 /*

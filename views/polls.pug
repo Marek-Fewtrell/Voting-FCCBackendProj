@@ -3,6 +3,13 @@ extends layout
 block content
   h2 Poll Page
   a(href='polls/create') Create Poll
+  if userPolls.length > 0
+    h3 My polls
+    ul
+      each poll in userPolls
+        a(href="/poll/"+ poll._id)
+          li= poll.pollName
+
   if listOfPolls.length > 0
     ul
       each val in listOfPolls
