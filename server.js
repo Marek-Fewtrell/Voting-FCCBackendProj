@@ -84,10 +84,14 @@ app.get('/polls/create', function(req, res, next) {
 })
 app.post('/polls/create', function(req, res, next) {
   if (req.body.pollName) {
-
+    console.log(req.body)
     var newPollOptions = []
-    newPollOptions.push({name: req.body.pollOption1})
-    newPollOptions.push({name: "Test Option 3"})
+
+    for(var i = 0; i < req.body.pollOption.length; i++) {
+      newPollOptions.push({name: req.body.pollOption[i]})
+    }
+    //newPollOptions.push({name: req.body.pollOption1})
+    //newPollOptions.push({name: "Test Option 3"})
 
     console.log("poll Options:")
     console.log(newPollOptions)
@@ -147,12 +151,16 @@ app.get('/poll/:pollId', function(req, res, next) {
         } else {
           console.log(result)
           var isOwner = false
+          var isAuthed = false
+          if (req.session.hasOwnProperty("userId")) {
+            isAuthed = true
+          }
           console.log(result.pollCreator + ":\:" + req.session.userId)
           if (result.pollCreator === req.session.userId) {
             isOwner = true
           }
           console.log("owner true?" + isOwner)
-          res.render('poll', {poll: result, isOwner: isOwner})
+          res.render('poll', {poll: result, isOwner: isOwner, isAuthed: isAuthed})
         }
       }
     )
@@ -161,7 +169,6 @@ app.get('/poll/:pollId', function(req, res, next) {
 /*
   Update a poll
 */
-
 
 /*
   Deleting a poll
@@ -199,8 +206,30 @@ app.get('/polls/delete/:pollId', function(req, res, next) {
 app.get('polls/:pollId/add', function(req, res, next) {
 
 })
-app.post('polls/:pollId/add', function(req, res, next) {
+app.post('/poll/:pollId/add', function(req, res, next) {
+  console.log("In polls/id/add")
+  polls.findOne({_id: req.params.pollId}).exec(
+    function(err, result) {
+      if (err) {
+        return next(err)
+      } else {
+        console.log("adding item")
+        console.log(req.body.pollOptionItem)
+        var newPollItem = {name: req.body.pollOptionItem}
 
+        result.pollOptions.push(newPollItem)
+
+        console.log(result.pollOptions)
+
+        result.save(function(err, updateResult) {
+          if (err) return next(err)
+          res.redirect("/poll/"+ result._id)
+          //res.render('poll', {poll: result, isOwner: isOwner, isAuthed: isAuthed})
+        })
+
+      }
+    }
+  )
 })
 
 /*

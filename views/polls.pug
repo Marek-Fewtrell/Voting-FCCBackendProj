@@ -9,7 +9,7 @@ block content
       each poll in userPolls
         a(href="/poll/"+ poll._id)
           li= poll.pollName
-
+  h2 All Polls
   if listOfPolls.length > 0
     ul
       each val in listOfPolls

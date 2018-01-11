@@ -5,8 +5,11 @@ block content
   h4 Created By: #{poll.pollCreator}
   if isOwner == true
     a(href='/polls/delete/' + poll._id) Delete Poll
-  else
-    h2 Test
+
+  if isAuthed
+    form(action=poll._id + "/add", method="post", name="addingOption")
+      input(type="text", class="", name="pollOptionItem")
+      button(type="submit") Add Option
   h3 Poll Options
   each val in poll.pollOptions
     a(href='/polls/' + poll._id + '/vote/' + val._id) Vote for #{val.name}
