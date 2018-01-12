@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 //app.use(express.static('./public'))
 app.use(express.static(path.join(__dirname, '/public')))
+app.use('/charting', express.static(__dirname + '/node_modules/chart.js/dist/'));
 
 app.use(session({
     secret: 'test',
@@ -98,7 +99,7 @@ app.post('/polls/create', function(req, res, next) {
 
     var pollData = {
       pollName: req.body.pollName,
-      pollCreator: req.session.userId,
+      pollCreator: req.session.hasOwnProperty("userId") ? req.session.userId : -1,
       pollOptions: newPollOptions
     }
     console.log(pollData)

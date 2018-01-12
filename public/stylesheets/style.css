@@ -31,3 +31,12 @@ table {
 a {
 	color: #2574A9;
 }
+
+canvas {
+	display:block;
+
+}
+
+canvas-holder {
+	width: 20%
+}

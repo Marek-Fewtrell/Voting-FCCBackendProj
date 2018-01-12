@@ -2,7 +2,7 @@ extends layout
 
 block content
   h2 #{poll.pollName} Poll Page
-  h4 Created By: #{poll.pollCreator}
+  //h4 Created By: #{poll.pollCreator}
   if isOwner == true
     a(href='/polls/delete/' + poll._id) Delete Poll
 
@@ -14,3 +14,10 @@ block content
   each val in poll.pollOptions
     a(href='/polls/' + poll._id + '/vote/' + val._id) Vote for #{val.name}
     p #{val.name} Voted: #{val.count}
+
+  div(id="canvas-holder")
+    canvas(id="myChart", width="760", height="400")
+
+  script var pollData = !{JSON.stringify(poll)}
+  script(src='/charting/Chart.js')
+  script(src='/javascript/pollCharts.js')
