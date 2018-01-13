@@ -7,9 +7,10 @@ var mongoose = require('mongoose')
 
 //var MongoClient = require('mongodb').MongoClient;
 var mongoURL = "mongodb://localhost/votingApp";
-mongoose.connect(mongoURL)
+var promise = mongoose.connect(mongoURL, {
+  useMongoClient: true
+})
 var db = mongoose.connection
-
 //handle mongo error
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -26,7 +27,6 @@ app.set('views', './views')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-//app.use(express.static('./public'))
 app.use(express.static(path.join(__dirname, '/public')))
 app.use('/charting', express.static(__dirname + '/node_modules/chart.js/dist/'));
 
@@ -40,7 +40,7 @@ var user = require ('./models/user')
 var polls = require ('./models/poll')
 
 app.get('/', function(req, res, next) {
-  res.redirect('/index')
+  res.redirect('polls')
 })
 
 //Middleware to ensure user is logged in to view the main page.
@@ -85,24 +85,25 @@ app.get('/polls/create', function(req, res, next) {
 })
 app.post('/polls/create', function(req, res, next) {
   if (req.body.pollName) {
-    console.log(req.body)
     var newPollOptions = []
 
-    for(var i = 0; i < req.body.pollOption.length; i++) {
-      newPollOptions.push({name: req.body.pollOption[i]})
+    if (Array.isArray(req.body.pollOption)) {
+      for(var i = 0; i < req.body.pollOption.length; i++) {
+        newPollOptions.push({name: req.body.pollOption[i]})
+      }
+    } else {
+      newPollOptions.push({name: req.body.pollOption})
     }
-    //newPollOptions.push({name: req.body.pollOption1})
-    //newPollOptions.push({name: "Test Option 3"})
 
-    console.log("poll Options:")
-    console.log(newPollOptions)
+    /*console.log("poll Options:")
+    console.log(newPollOptions)*/
 
     var pollData = {
       pollName: req.body.pollName,
       pollCreator: req.session.hasOwnProperty("userId") ? req.session.userId : -1,
       pollOptions: newPollOptions
     }
-    console.log(pollData)
+
     polls.create(pollData, function(err, poll) {
       if (err) {
         return next(err)
@@ -123,7 +124,6 @@ app.get('/polls', function (req, res, next) {
         return next(err)
       } else {
         var myPolls = []
-        //console.log(polls)
         if (req.session && req.session.userId) {
           myPolls = polls.filter(x => x.pollCreator == req.session.userId)
           //var otherPolls = polls.map()
@@ -150,17 +150,15 @@ app.get('/poll/:pollId', function(req, res, next) {
         if (err) {
           return next(err)
         } else {
-          console.log(result)
+          //console.log(result)
           var isOwner = false
           var isAuthed = false
           if (req.session.hasOwnProperty("userId")) {
             isAuthed = true
           }
-          console.log(result.pollCreator + ":\:" + req.session.userId)
           if (result.pollCreator === req.session.userId) {
             isOwner = true
           }
-          console.log("owner true?" + isOwner)
           res.render('poll', {poll: result, isOwner: isOwner, isAuthed: isAuthed})
         }
       }
@@ -208,19 +206,14 @@ app.get('polls/:pollId/add', function(req, res, next) {
 
 })
 app.post('/poll/:pollId/add', function(req, res, next) {
-  console.log("In polls/id/add")
   polls.findOne({_id: req.params.pollId}).exec(
     function(err, result) {
       if (err) {
         return next(err)
       } else {
-        console.log("adding item")
-        console.log(req.body.pollOptionItem)
         var newPollItem = {name: req.body.pollOptionItem}
 
         result.pollOptions.push(newPollItem)
-
-        console.log(result.pollOptions)
 
         result.save(function(err, updateResult) {
           if (err) return next(err)
@@ -240,27 +233,17 @@ app.get('/polls/:pollId/vote/:voteId', function(req, res, next) {
 
   polls.findById(req.params.pollId, function(err, result) {
     if (err) return next(err)
-    //console.log("This is the result:")
-    //console.log(result)
 
     var voteItem = result.pollOptions.findIndex(function(element) {
       return element._id == req.params.voteId
     })
-    //console.log("index: " + voteItem)
-    //var tempCount = result.pollOptions[voteItem].count
-    //tempCount += 1
-    //result.set({pollOptions[voteItem].count: tempCount})
+
     result.pollOptions[voteItem].count += 1
+    result.pollAggregateCount += 1
 
     result.save(function(err, updateResult) {
       if (err) return next(err)
       res.redirect('/poll/' + req.params.pollId)
-      //res.render('poll/' + req.params.pollId)
-      /*res.render('poll', function(err, html) {
-        console.log("Sending html")
-        console.log(html)
-        return res.send(html)
-      })*/
     })
   })
 

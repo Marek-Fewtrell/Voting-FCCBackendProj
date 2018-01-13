@@ -6,7 +6,7 @@ window.onload = function() {
   var pollDataSet = []
 
   var pollOptions = pollData.pollOptions
-  console.log(pollOptions)
+
   for (var i = 0 ; i < pollOptions.length; i++) {
     pollLabels.push(pollOptions[i].hasOwnProperty('name') ? pollOptions[i].name : "unnamed")
     pollDataSet.push(pollOptions[i].count)

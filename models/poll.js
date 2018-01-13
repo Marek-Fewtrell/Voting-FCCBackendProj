@@ -25,6 +25,10 @@ var PollSchema = new Schema({
     required: true,
     //unique: true
   },*/
+  pollAggregateCount: {
+    type: Number,
+    default: 0
+  },
   pollOptions: [pollOptionSchema]
 })
 
