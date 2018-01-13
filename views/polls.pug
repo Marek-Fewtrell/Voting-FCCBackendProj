@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  h2 Poll Page
-  a(href='polls/create') Create Poll
+  if authStatus
+    a(href='polls/create') Create Poll
   if userPolls.length > 0
     h3 My polls
     ul

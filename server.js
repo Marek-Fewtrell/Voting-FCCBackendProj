@@ -39,6 +39,18 @@ app.use(session({
 var user = require ('./models/user')
 var polls = require ('./models/poll')
 
+// ------------Middleware-------------------
+
+var authStatus = function(req, res, next) {
+  req.isLoggedIn = false;
+  if (req.session.hasOwnProperty('userId')) {
+    req.isLoggedIn = true;
+  }
+  next()
+}
+
+app.use(authStatus)
+
 app.get('/', function(req, res, next) {
   res.redirect('polls')
 })
@@ -49,28 +61,13 @@ app.use('/index', function(req, res, next) {
     return next()
   } else {
     res.redirect('/login')
-    /*var err = new Error('You must be logged in')
-    err.status = 400
-    return next(err)*/
   }
 })
 
-app.get('/index', function (req, res, next) {
+/*app.get('/index', function (req, res, next) {
   //return res.sendFile(process.cwd() + '/views/index.html')
   //res.send("hello world")
   res.render("index")
-})
-
-/*app.post('/', function (req, res, next) {
-  res.send("got a POST request")
-})
-
-app.put('/', function (req, res, next) {
-  res.send("got a PUT request")
-})
-
-app.delete('/', function (req, res, next) {
-  res.send("got a DELETE request")
 })*/
 
 
@@ -81,9 +78,16 @@ app.delete('/', function (req, res, next) {
   Creating a new poll
 */
 app.get('/polls/create', function(req, res, next) {
-  res.render('pollcreate')
+  if (req.isLoggedIn) {
+    res.render('pollcreate')
+  } else {
+    res.redirect('/login')
+  }
 })
 app.post('/polls/create', function(req, res, next) {
+  if (!req.isLoggedIn) {
+    res.redirect('/login')
+  }
   if (req.body.pollName) {
     var newPollOptions = []
 
@@ -128,17 +132,10 @@ app.get('/polls', function (req, res, next) {
           myPolls = polls.filter(x => x.pollCreator == req.session.userId)
           //var otherPolls = polls.map()
         }
-        res.render('polls', {listOfPolls: polls, userPolls: myPolls})
+        res.render('polls', {listOfPolls: polls, userPolls: myPolls, authStatus: req.isLoggedIn})
       }
     }
   )
-})
-app.post('/polls', function(req, res, next) {
-  if (req.body.type && req.body.type == 'add') {
-
-  } else if (req.body.type && req.body.type == 'remove') {
-
-  }
 })
 
 /*
@@ -152,14 +149,10 @@ app.get('/poll/:pollId', function(req, res, next) {
         } else {
           //console.log(result)
           var isOwner = false
-          var isAuthed = false
-          if (req.session.hasOwnProperty("userId")) {
-            isAuthed = true
-          }
           if (result.pollCreator === req.session.userId) {
             isOwner = true
           }
-          res.render('poll', {poll: result, isOwner: isOwner, isAuthed: isAuthed})
+          res.render('poll', {poll: result, isOwner: isOwner, authStatus: req.isLoggedIn})
         }
       }
     )
@@ -173,10 +166,12 @@ app.get('/poll/:pollId', function(req, res, next) {
   Deleting a poll
 */
 app.get('/polls/delete/:pollId', function(req, res, next) {
-
+  if (!req.isLoggedIn) {
+    res.redirect('/login')
+  }
   polls.remove({_id: req.params.pollId, pollCreator: req.session.userId}, function(err) {
     if (err) return next(err)
-    console.log("deleted poll")
+    res.redirect('/polls')
   })
   /*polls.findOne({_id: req.params.pollId}).exec(
     function(err, result) {
@@ -202,10 +197,10 @@ app.get('/polls/delete/:pollId', function(req, res, next) {
 /*
   Creating an option to a poll
 */
-app.get('polls/:pollId/add', function(req, res, next) {
-
-})
 app.post('/poll/:pollId/add', function(req, res, next) {
+  if (!req.isLoggedIn) {
+    res.redirect('/login')
+  }
   polls.findOne({_id: req.params.pollId}).exec(
     function(err, result) {
       if (err) {
@@ -230,7 +225,6 @@ app.post('/poll/:pollId/add', function(req, res, next) {
   voting for an option for a poll
 */
 app.get('/polls/:pollId/vote/:voteId', function(req, res, next) {
-
   polls.findById(req.params.pollId, function(err, result) {
     if (err) return next(err)
 

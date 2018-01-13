@@ -6,7 +6,7 @@ block content
   if isOwner == true
     a(href='/polls/delete/' + poll._id) Delete Poll
 
-  if isAuthed
+  if authStatus
     form(action=poll._id + "/add", method="post", name="addingOption")
       input(type="text", class="", name="pollOptionItem")
       button(type="submit") Add Option
