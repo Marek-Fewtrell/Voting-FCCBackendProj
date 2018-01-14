@@ -17,26 +17,98 @@ a {
 	margin-top: 40px;
 }
 
-table {
-  margin:auto;
+ul {
+	list-style-type: none;
 }
-
 
 .footer {
 	margin-top: 60px;
 }
 
-
-
 a {
 	color: #2574A9;
 }
 
-canvas {
-	display:block;
+/* Menu */
 
+nav {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+	padding-left: 30px;
+	padding-right: 30px;
+	margin: 0;
+
+	margin: 27px auto 0;
+	position: relative;
+	height: 50px;
+	background-color: #34495e;
+	border-radius: 8px;
+	font-size: 0;
 }
 
-canvas-holder {
-	width: 20%
+nav a {
+	line-height: 50px;
+	height: 100%;
+	font-size: 15px;
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+	text-decoration: none;
+	text-transform: uppercase;
+	text-align: center;
+	color: white;
+	cursor: pointer;
+}
+
+/* Login Form */
+/*
+Inspiration from
+Transit Login Form - w3layouts.com
+*/
+
+.main-form {
+  padding: 3em 0 0;
+  text-align: center;
+}
+.main-form-row {
+  margin: 0 auto;
+	background:rgba(0, 0, 10, 0.66);
+	width:25%;
+	padding:2em;
+}
+
+.main-form input[type="text"], .main-form input[type="password"] {
+  outline: none;
+  font-size: 1em;
+  color: #fff;
+  padding: .6em 1em;
+  margin: 0;
+  width: 91%;
+  border: none;
+  border: 1px solid rgb(255, 255, 255);
+  -webkit-appearance: none;
+  display: block;
+  background: transparent;
+}
+
+.main-form label {
+  font-size: 0.9em;
+  color: #fff;
+  margin: 1.5em 0 .8em;
+  font-weight: 200;
+  letter-spacing: 6px;
+  text-align: left;
+}
+
+.main-form h2{
+  font-size: 2.2em;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1.5em;
+  line-height: 0.7em;
+
+  font-weight: 100;
+  letter-spacing: 2px;
 }

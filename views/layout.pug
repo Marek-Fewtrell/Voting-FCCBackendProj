@@ -6,12 +6,13 @@ html(lang="en")
     //script(src='/javascript/test.js')
 body
   h1= title ? title : "Voting App"
-  a(href='/polls') Polls
-  if !authStatus
-    a(href='/login') Login
-    a(href='/register') Register
-  else
-    a(href='/logout') Logout
+  nav(class="")
+    a(href='/polls') Polls
+    if !authStatus
+      a(href='/login') Login
+      a(href='/register') Register
+    else
+      a(href='/logout') Logout
   div#container
-  hr
-  block content
+    hr
+    block content

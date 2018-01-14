@@ -1,16 +1,19 @@
 extends layout
 
 block content
-    h2 Register Page
-    form(name="registerForm", method="post")
-      div
-        label username:
-        input(type="text" name="username")
-      div
-        label password:
-        input(type="password", name="password")
-      div
-        label confirm password:
-        input(type="password", name="passwordConf")
-      div
-        input(type="submit")
+  div(class="main-form")
+    div(class="main-form-row")
+      h2 Register Page
+      div(class="main-form-login")
+        form(name="registerForm", method="post")
+          div
+            label username:
+            input(type="text" name="username")
+          div
+            label password:
+            input(type="password", name="password")
+          div
+            label confirm password:
+            input(type="password", name="passwordConf")
+          div
+            input(type="submit", value="Register")
