@@ -2,21 +2,31 @@ extends layout
 
 block content
   h2 #{poll.pollName} Poll Page
-  //h4 Created By: #{poll.pollCreator}
-  if isOwner == true
-    a(href='/polls/delete/' + poll._id) Delete Poll
-
-  if authStatus
-    form(action=poll._id + "/add", method="post", name="addingOption")
-      input(type="text", class="", name="pollOptionItem")
-      button(type="submit") Add Option
-  h3 Poll Options
-  each val in poll.pollOptions
-    a(href='/polls/' + poll._id + '/vote/' + val._id) Vote for #{val.name}
-    p #{val.name} Voted: #{val.count}
-
-  div(id="canvas-holder")
-    canvas(id="myChart", width="760", height="400")
+  small
+    if isOwner == true
+      a(href='/polls/delete/' + poll._id) Delete Poll
+  div.pollDisplay
+    div.pollDisplayHalf
+      if authStatus
+        form(action=poll._id + "/add", method="post", name="addingOption")
+          div
+            label New Option:
+            input(type="text", class="", name="pollOptionItem")
+            button(type="submit") Add Option
+      h3 Poll Options
+      table
+        tr
+          th Option
+          th Num. Of Votes
+          th
+        each val in poll.pollOptions
+          tr
+            td= val.name
+            td= val.count
+            td
+              a(href='/polls/' + poll._id + '/vote/' + val._id) Vote!
+    div(id="canvas-holder", class="pollDisplayHalf")
+      canvas(id="myChart", width="760", height="400")
 
   script var pollData = !{JSON.stringify(poll)}
   script(src='/charting/Chart.js')

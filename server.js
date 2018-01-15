@@ -79,7 +79,7 @@ app.use('/index', function(req, res, next) {
 */
 app.get('/polls/create', function(req, res, next) {
   if (req.isLoggedIn) {
-    res.render('pollcreate')
+    res.render('pollcreate', {authStatus: req.isLoggedIn})
   } else {
     res.redirect('/login')
   }

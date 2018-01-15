@@ -2,19 +2,22 @@ extends layout
 
 block content
   script(src='/javascript/pollCreate.js')
-  h2 Poll Create Page
-  form(name="pollForm" method="post")
-    div
-      label(for="pollName") Poll Name
-      input(type="text", name="pollName")
-    div
-      div
-        h3 Poll Options
-        button(type="button", onclick='addOption()') Add Options
-        button(type="button", onclick='removeOption()') Remove Last Option
-      div(id="pollOptions")
-        input(type="text", class="pollOptionItem", name="pollOption")
-      br
+  div(class="main-form")
+    div(class="main-form-row")
+      h2 Poll Create Page
+      div(class="main-form-login")
+        form(name="pollForm" method="post")
+          div
+            label(for="pollName") Poll Name
+            input(type="text", name="pollName")
+          div
+            div
+              h2 Poll Options
+              button(type="button", onclick='addOption()') Add Options
+              button(type="button", onclick='removeOption()') Remove Last Option
+            div(id="pollOptions")
+              input(type="text", class="pollOptionItem", name="pollOption")
+            br
 
-    div
-      input(type="submit")
+          div
+            input(type="submit")
