@@ -1,4 +1,4 @@
-
+require('dotenv').load();
 const path = require("path")
 const express = require('express')
 var bodyParser = require('body-parser')
@@ -7,7 +7,7 @@ var mongoose = require('mongoose')
 
 
 //var mongoURL = "mongodb://localhost/votingApp";
-var mongoURL = process.env.MONGO_URI;
+var mongoURL = process.env.MONGOURL;
 var promise = mongoose.connect(mongoURL, {
   useMongoClient: true
 })
