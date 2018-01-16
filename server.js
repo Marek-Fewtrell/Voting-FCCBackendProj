@@ -5,8 +5,9 @@ var bodyParser = require('body-parser')
 var session = require('express-session')
 var mongoose = require('mongoose')
 
-//var MongoClient = require('mongodb').MongoClient;
-var mongoURL = "mongodb://localhost/votingApp";
+
+//var mongoURL = "mongodb://localhost/votingApp";
+var mongoURL = process.env.MONGO_URI;
 var promise = mongoose.connect(mongoURL, {
   useMongoClient: true
 })
